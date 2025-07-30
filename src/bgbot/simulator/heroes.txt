@@ -1,0 +1,5 @@
+A few types of hero abilities:
+    -Play with target of minion in shop or board
+    -play with no target, perhaps start of combat effect or galewing type beat
+    -Passive effects like the left and right minion attack first guy
+    

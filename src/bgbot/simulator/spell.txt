@@ -1,0 +1,4 @@
+Spells have the following functionalities:
+    Play with no target
+
+    Play with target

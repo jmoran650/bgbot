@@ -1,0 +1,16 @@
+
+
+Board is made up of minions, max 7
+
+Board needs following functionalities:
+
+    Placing a minion on the Board
+
+    Moving a minions position on the board
+
+    Selling a minion to bob from the board
+
+    Destroying a minion on the board i.e. Butchering, Devour
+    
+
+

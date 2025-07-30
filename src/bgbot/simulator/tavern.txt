@@ -1,0 +1,17 @@
+Tavern functions as follows:
+    Pulls random minions from pool of players tier or below
+
+    Pulls 3 + players tavern tier up to 7? minions? and 1 spell unless special refreshes happen i.e. minion to have one extra spell on refresh, demon to refresh with an extra spell that costs health
+
+    Players have the following choices in the tavern:
+        Buy a card/spell
+
+        Roll
+
+        Freeze
+
+        Upgrade Tavern
+
+
+
+

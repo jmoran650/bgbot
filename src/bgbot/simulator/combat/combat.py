@@ -7,32 +7,33 @@ def class Combat(Player1, Player2):
 
     def determineOrder(board1, board2):
         if (board1.numberOfMinions > board2.numberOfMinions):
-            Combat.startCombat(board1, board2, rand=false)
+            return "board1 goes first"
         else if (board1.numberOfMinions < board2.numberOfMinions):
-            Combat.startCombat(board2, board1, rand=false)
+            return "board2 goes first"
         else if (board1.numberOfMinions == board2.numberOfMinions):
-            Combat.startCombat(board1, board2, rand=true)
+            return coinflip, heads = board1 goes first, tails = board2 goes first
+        
     
-    def startCombat(board1, board2, rand):
-        if rand = true:
-            coinflip to determine who goes first
-        else:
-            for minions in board1, board2:
-                # This needs to be in the order they attack, needs to trigger hero start of combats as well
-                combat.performStartOfCombat(board1, board2)
+    def startOfCombat(board1, board2, order):
+        if order = "board1 goes first":
+            combat.performStartOfCombat(board1)
+            combat.performStartOfCombat(board2)
+        else if order = "board2 goes first":
+            combat.performStartOfCombat(board2)
+            combat.performStartOfCombat(board1)
     
-    def performStartOfCombat(board1, board2, order):
-        for minions in board1, board2 according to order:
+    def performStartOfCombat(board):
+        for minions in board:
             minion.executeStartOfCombat()
     
-    def PerformCombat(board1, board2, order):
+    def PerformCombat(board1, board2):
         while minions are still alive on both boards:
             for minions in board1, board2:
                 minion.attack()
 
-        when all minions are dead for a player:
-            damageTaken = calculateDamage(winningBoard)
-            losingPlayer.takeDamage(damageTaken)
+        damageTaken = calculateDamage(winningBoard)
+        losingPlayer.takeDamage(damageTaken)
+        returnToShopPhase()
 
     
 

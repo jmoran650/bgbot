@@ -5,7 +5,7 @@ Defines `Tribe` enum and `Minion` data class for the Hearthstone Battlegrounds s
 from enum import Enum
 from dataclasses import dataclass
 from typing import List
-from board import Board
+from .board import Board
 
 
 class Tribe(Enum):
@@ -22,9 +22,9 @@ class Tribe(Enum):
     NEUTRAL = "neutral"
 
 @dataclass
-class Minion(board):
+class Minion():
     """A basic Battlegrounds minion with combat-relevant stats and metadata."""
-    board: self.board
+    board: Board
     attack: int
     health: int
     tribes: List[Tribe]

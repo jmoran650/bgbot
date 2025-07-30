@@ -14,5 +14,6 @@ Tavern functions as follows:
 
     There are some special cases with rolling, for example free rolls, rolls with higher tavern minions i.e. Toki
     
+    Hand of 10 cards, cards in hand sometimes are affected by what happens on the tavern board
 
 

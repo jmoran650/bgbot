@@ -12,6 +12,7 @@ Tavern functions as follows:
 
         Upgrade Tavern
 
-
+    There are some special cases with rolling, for example free rolls, rolls with higher tavern minions i.e. Toki
+    
 
 

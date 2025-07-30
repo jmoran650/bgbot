@@ -1,0 +1,18 @@
+
+
+
+Combat Order:
+    Player with more minions attacks first, otherwise coin flip to determine
+
+    Start of combat effects take place left to right
+
+    From there, minions attack left to right UNLESS hero power to attack first
+
+    Functionalities to think about: 
+        When attacking, a minion must always choose from taunted minions when there are taunted minions on the board
+
+        Summons must only trigger when there is space on the board, reborns trigger after Summons i.e. eternal summoner
+
+        Certain battlecries must be able to trigger in combat
+
+

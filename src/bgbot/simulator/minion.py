@@ -43,4 +43,3 @@ class Minion:
     def __repr__(self) -> str:  # pragma: no cover
         tribe_names = "/".join(t.value for t in self.tribes)
         return f"<Minion {self.attack}/{self.health} [{tribe_names}]>"
-    

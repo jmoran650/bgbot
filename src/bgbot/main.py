@@ -3,19 +3,29 @@
 from __future__ import annotations
 
 import asyncio
-import torch
-import tensorflow as tf
+#import torch
+#import tensorflow as tf
 
 
 async def main() -> None:
     """Print simple tensor shapes to verify installed libraries."""
-    # PyTorch quick test
-    x = torch.randn(5, 3)
-    print("Torch tensor:", x.shape)
 
-    # TensorFlow quick test
-    y = tf.constant([[1, 2, 3]])
-    print("TensorFlow tensor:", y)
+    print("Starting Game Loop")
+
+    print("Start Turn 1")
+
+    print("End Turn 1")
+
+    print("Start Combat 1")
+
+    #Starting here
+
+    print("End Combat 1")
+
+
+
+
+
 
 
 if __name__ == "__main__":

@@ -1,0 +1,21 @@
+
+
+# of copies of minion by each tier,
+
+# of copies determines chance to roll
+
+choose each minion one by one from the pool when a player rolls and decrement each card rolled accordingly.
+
+If a player rolls a card and does not buy it increment it to return that copy back to the pool.
+
+If a player buys a card keep the decrement until the card is sold. Selling a golden counts for as many of the cards in the golden as were bought, copies dont count
+
+
+
+Minion in pool has attributes {tier, tribe, }
+
+{tier, tribe } : {minion}
+
+roll{tier, tribes}{
+    draw only minions from this tier and below and of these tribes
+}

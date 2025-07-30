@@ -39,8 +39,9 @@ class Minion:
     """A basic Battlegrounds minion with combat-relevant stats and metadata."""
    
     
-    def __init__(self, cardName: str, attack: int, health: int, tribes: List[Tribe], keywords: List[Keyword] = [], effects: List[str] = []):
+    def __init__(self, cardName: str, tier: int, attack: int, health: int, tribes: List[Tribe], keywords: List[Keyword] = [], effects: List[str] = []):
         self.cardName = cardName
+        self.tier = tier
         self.attack = attack
         self.health = health
         self.tribes = tribes

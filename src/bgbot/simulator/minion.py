@@ -4,7 +4,7 @@ Defines `Tribe` enum and `Minion` data class for the Hearthstone Battlegrounds s
 from __future__ import annotations
 
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 class Tribe(Enum):
@@ -18,6 +18,7 @@ class Tribe(Enum):
     DEMON = "demon"
     PIRATE = "pirate"
     BEAST = "beast"
+    DRAGON = "dragon"
     NEUTRAL = "neutral"
     ALL = "all"
 
@@ -28,8 +29,8 @@ class Minion():
     attack: int
     health: int
     tribes: List[Tribe]
-    keywords: List[str] = []
-    effects: List[str] = []
+    keywords: list[str] = field(default_factory=lambda: [])
+    effects: list[str] = field(default_factory=lambda: [])
 
     def __post_init__(self) -> None:
         if not self.tribes:

@@ -3,7 +3,7 @@
 from __future__ import annotations
 import random
 from .board import Board
-from .minion import Minion
+from .minion import Minion, Tribe
 
 
 
@@ -110,4 +110,23 @@ class Combat:
             return f"{self.board2.player_name} wins!"
         return "It's a Tie!"
     
+if __name__ == "__main__":
+    # Setup Player 1's board
+    p1_board = Board("Player 1", [
+        Minion("Scallywag", 2, 1, [Tribe.PIRATE]),
+        Minion("Tough Tusk", 4, 3, [Tribe.QUILBOAR])
+    ])
+
+    # Setup Player 2's board
+    p2_board = Board("Player 2", [
+        Minion("Wrath Weaver", 1, 3, [Tribe.DEMON]),
+        Minion("Micro Machine", 2, 2, [Tribe.MECH]),
+        Minion("Red Whelp", 3, 2, [Tribe.DRAGON])
+    ])
+
+    # Create and run the combat
+    combat_instance = Combat(p1_board, p2_board)
+    winner = combat_instance.resolve_combat()
+    print(f"\nRESULT: {winner}")
+
 

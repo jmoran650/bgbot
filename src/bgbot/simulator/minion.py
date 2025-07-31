@@ -1,11 +1,12 @@
 """minion.py
 Defines `Tribe` enum and `Minion` data class for the Hearthstone Battlegrounds simulator.
 """
-from __future__ import annotations
 
 from enum import Enum
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List
+from .board import Board
+
 
 class Tribe(Enum):
     """All possible minion tribes. Some minions may belong to two tribes at once."""
@@ -18,7 +19,6 @@ class Tribe(Enum):
     DEMON = "demon"
     PIRATE = "pirate"
     BEAST = "beast"
-    DRAGON = "dragon"
     NEUTRAL = "neutral"
     ALL = "all"
 
@@ -26,11 +26,16 @@ class Tribe(Enum):
 class Minion():
     """A basic Battlegrounds minion with combat-relevant stats and metadata."""
     name: str
+    board: Board
+    baseAttack: int
+    baseHealth: int
     attack: int
     health: int
     tribes: List[Tribe]
-    keywords: list[str] = field(default_factory=lambda: [])
-    effects: list[str] = field(default_factory=lambda: [])
+    keywords: List[str] = []
+    effects: List[str] = []
+
+
 
     def __post_init__(self) -> None:
         if not self.tribes:
@@ -40,17 +45,7 @@ class Minion():
         """Increase this minion's stats by the supplied amounts."""
         self.attack += attack_increment
         self.health += health_increment
-
-    def take_damage(self, damage: int):
-        """Reduces the minion's health by the damage amount."""
-        self.health -= damage
-        print(f"    - {self.name} takes {damage} damage, health is now {self.health}.")
-
-    @property
-    def is_alive(self) -> bool:
-        """Checks if the minion's health is above zero."""
-        return self.health > 0
-
+            
     # Optional: nicer debug display.
     def __repr__(self) -> str:  # pragma: no cover
         tribe_names = "/".join(t.value for t in self.tribes)

@@ -24,6 +24,7 @@ class Tribe(Enum):
 @dataclass
 class Minion():
     """A basic Battlegrounds minion with combat-relevant stats and metadata."""
+    name: str
     board: Board
     attack: int
     health: int

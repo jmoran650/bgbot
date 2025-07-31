@@ -20,16 +20,21 @@ class Tribe(Enum):
     PIRATE = "pirate"
     BEAST = "beast"
     NEUTRAL = "neutral"
+    ALL = "all"
 
 @dataclass
 class Minion():
     """A basic Battlegrounds minion with combat-relevant stats and metadata."""
     board: Board
+    baseAttack: int
+    baseHealth: int
     attack: int
     health: int
     tribes: List[Tribe]
     keywords: List[str] = []
     effects: List[str] = []
+
+
 
     def __post_init__(self) -> None:
         if not self.tribes:
@@ -39,7 +44,7 @@ class Minion():
         """Increase this minion's stats by the supplied amounts."""
         self.attack += attack_increment
         self.health += health_increment
-
+            
     # Optional: nicer debug display.
     def __repr__(self) -> str:  # pragma: no cover
         tribe_names = "/".join(t.value for t in self.tribes)

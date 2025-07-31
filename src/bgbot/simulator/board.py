@@ -4,7 +4,7 @@ class Board():
 
     MAX_MINIONS = 7
 
-    def __init__(self):
+    def __init__(self, max_size: int = 7):
         self.minions = []
         self.hero = None
         self.hero_power = None

@@ -2,7 +2,6 @@
 Main game logic for Hearthstone Battlegrounds simulator.
 """
 import random
-from .player import Player
 from .minion import Tribe
 from .pool import Pool
 

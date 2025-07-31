@@ -6,8 +6,6 @@ class Board():
 
     def __init__(self, max_size: int = 7):
         self.minions = []
-        self.hero = None
-        self.hero_power = None
     
     def add_minion(self, minion: Minion):
         if len(self.minions) < self.MAX_MINIONS:

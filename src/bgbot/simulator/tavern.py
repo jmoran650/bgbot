@@ -51,5 +51,3 @@ class Tavern:
         # For now, just increment the tier
         self.tavern_tier += 1
         return True
-
-

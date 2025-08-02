@@ -18,8 +18,6 @@ class Player():
         self.armor = 0
         self.board = board
         self.tavern = tavern
-
-
     def take_damage(self, damage: int):
         """Reduces the player's health by the specified amount of damage.
 

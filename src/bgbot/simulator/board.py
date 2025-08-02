@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .minion import Minion
-    MAX_MINIONS = 7
+
+MAX_MINIONS = 7
 
 class Board:
     """Represents the board of minions for a player."""

@@ -1,9 +1,10 @@
-
+from .tavern import Tavern
+from .board import Board
 
 class Player():
     """Represents a player in a Hearthstone Battlegrounds game."""
 
-    def __init__(self, name: str, hero: str):
+    def __init__(self, name: str, hero: str, tavern: Tavern, board: Board):
         """Initializes a Player instance.
 
         Args:
@@ -15,6 +16,9 @@ class Player():
         self.health = 30
         self.alive = True
         self.armor = 0
+        self.board = board
+        self.tavern = tavern
+
 
     def take_damage(self, damage: int):
         """Reduces the player's health by the specified amount of damage.

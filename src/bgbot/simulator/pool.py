@@ -108,7 +108,7 @@ class Pool:
         for name in chosen_names:
             self.available_counts[name] -= 1
             blueprint = self.minion_blueprints[name]
-            
+        
             # Use the blueprint to construct a fresh Minion instance.
             rolled_minions.append(Minion(
                     name=blueprint.name,

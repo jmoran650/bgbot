@@ -15,6 +15,7 @@ class Player():
         self.health = 30
         self.alive = True
         self.armor = 0
+        
 
     def take_damage(self, damage: int):
         """Reduces the player's health by the specified amount of damage.

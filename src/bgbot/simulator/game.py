@@ -7,8 +7,11 @@ architecture in which:
     • Board lives only on Player; Tavern only manages the shop.
 """
 from __future__ import annotations
-
 import random
+import logging
+import os
+from datetime import datetime
+
 from typing import List
 
 from .minion import Tribe
@@ -16,6 +19,43 @@ from .pool import Pool
 from .player import Player
 from .combat import Combat
 
+
+def setup_logging() -> str:
+    """
+    Configures file logging into a 'logs' directory with a unique filename.
+    Format: [color]-[animal]-[timestamp].log
+    Returns the path to the created log file.
+    """
+    os.makedirs("logs", exist_ok=True)
+
+    # 1. Define lists for both colors and animals.
+    colors = [
+        "red", "blue", "green", "yellow", "purple", "orange", "golden",
+        "iron", "shadow", "crystal", "azure", "crimson", "jade"
+    ]
+    animals = [
+        "whelp", "hydra", "macaw", "raptor", "hyena", "kodo",
+        "wolf", "bear", "lion", "tiger", "serpent", "elemental"
+    ]
+    
+    # 2. Choose one from each list.
+    random_color = random.choice(colors)
+    random_animal = random.choice(animals)
+    
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    
+    log_filename = os.path.join(
+        "logs", 
+        f"{random_color}-{random_animal}-{timestamp}.log"
+    )
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+        filename=log_filename,
+        filemode="w"
+    )
+    return log_filename
 
 def pick_random_tribes() -> List[Tribe]:
     """Randomly select 5 unique tribes from the Tribe enum."""
@@ -55,11 +95,11 @@ class Game:
         self.turn: int = 1
         self.phase: str = "SHOP"  # alternates SHOP <-> COMBAT
 
-        # Intro printout -----------------------------------------------------
-        print("=== BATTLEGROUNDS GAME STARTED ===")
-        print(f"Players: {num_players}")
-        print(f"Active tribes: {[t.value for t in self.tribes]}")
-        print()
+        # Intro logging.infoout -----------------------------------------------------
+        logging.info("=== BATTLEGROUNDS GAME STARTED ===")
+        logging.info(f"Players: {num_players}")
+        logging.info(f"Active tribes: {[t.value for t in self.tribes]}")
+        logging.info("")
 
     # -------------------------------------------------------------------- #
     # Properties
@@ -74,12 +114,12 @@ class Game:
     # -------------------------------------------------------------------- #
     def run_game(self) -> None:
         """Run the full simulation until there is only one player left."""
-        print("🎮 Starting Hearthstone Battlegrounds simulation...")
+        logging.info("🎮 Starting Hearthstone Battlegrounds simulation...")
 
         while len(self.alive_players) > 1:
-            print(f"\n{'=' * 50}")
-            print(f"🔄 TURN {self.turn}")
-            print(f"{'=' * 50}")
+            logging.info(f"\n{'=' * 50}")
+            logging.info(f"🔄 TURN {self.turn}")
+            logging.info(f"{'=' * 50}")
 
             if self.phase == "SHOP":
                 self.shop_phase()
@@ -92,24 +132,24 @@ class Game:
             # Victory check
             if len(self.alive_players) == 1:
                 winner = self.alive_players[0]
-                print(f"\n🏆 GAME OVER! {winner.name} ({winner.hero}) WINS!")
+                logging.info(f"\n🏆 GAME OVER! {winner.name} ({winner.hero}) WINS!")
                 break
 
-        print(f"\nGame completed after {self.turn} turns.")
+        logging.info(f"\nGame completed after {self.turn} turns.")
 
     # -------------------------------------------------------------------- #
     # SHOP PHASE
     # -------------------------------------------------------------------- #
     def shop_phase(self) -> None:
         """Handle the shopping phase for all living players."""
-        print(f"\n🛒 SHOP PHASE - Turn {self.turn}")
-        print("-" * 30)
+        logging.info(f"\n🛒 SHOP PHASE - Turn {self.turn}")
+        logging.info("-" * 30)
 
         for player in self.alive_players:
-            print(f"\n{player.name}'s turn:")
+            logging.info(f"\n{player.name}'s turn:")
             self.simulate_player_turn(player)
 
-        print("\n✅ Shop phase complete")
+        logging.info("\n✅ Shop phase complete")
 
     def simulate_player_turn(self, player: Player) -> None:
         """Very light AI for a single player's turn."""
@@ -124,7 +164,7 @@ class Game:
         max_actions = 3
 
 
-        print(
+        logging.info(
             f"  💰 Gold: {player.gold} | "
             f"❤️  Health: {player.health} | "
             f"🏪 Tier: {player.tavern.tier}"
@@ -138,7 +178,7 @@ class Game:
             action = self.choose_action(player)
 
             if action == "roll" and player.gold >= 1:
-                print(f"    🎲 {player.name} rolls the shop")
+                logging.info(f"    🎲 {player.name} rolls the shop")
                 player.tavern.reroll_shop()
                 player.gold -= 1
                 player.tavern.display_shop()
@@ -148,18 +188,18 @@ class Game:
                 if board.minion_count < board.capacity:
                     idx = random.randint(0, len(tavern.shop) - 1)
                     minion = tavern.shop.pop(idx)
-                    print(
+                    logging.info(
                         f"    💰 {player.name} buys "
                         f"{minion.name} ({minion.attack}/{minion.health})"
                     )
                     board.add_minion(minion)
                     player.gold -= 3
                 else:
-                    print(f"    ❌ {player.name}'s board is full, can't buy")
+                    logging.info(f"    ❌ {player.name}'s board is full, can't buy")
                     break
 
             elif action == "upgrade" and player.gold >= tavern.tier:
-                print(
+                logging.info(
                     f"    ⬆️  {player.name} upgrades tavern "
                     f"to tier {tavern.tier + 1}"
                 )
@@ -167,7 +207,7 @@ class Game:
                 player.tavern.upgrade_tavern()
 
             elif action == "freeze" and player.gold >= 1:
-                print(f"    🧊 {player.name} freezes the shop")
+                logging.info(f"    🧊 {player.name} freezes the shop")
                 tavern.freeze()
                 player.gold -= 1
                 break  # typically end turn after freezing
@@ -178,12 +218,12 @@ class Game:
             actions_taken += 1
 
         # End-of-turn board summary
-        print(f"    🏟️  Final board: {board.minion_count} minions")
+        logging.info(f"    🏟️  Final board: {board.minion_count} minions")
         if board.minions:
             summary = ", ".join(
                 f"{m.name}({m.attack}/{m.health})" for m in board.minions
             )
-            print(f"      {summary}")
+            logging.info(f"      {summary}")
 
     # -------------------------------------------------------------------- #
     # AI decision helper
@@ -224,12 +264,12 @@ class Game:
     # -------------------------------------------------------------------- #
     def combat_phase(self) -> None:
         """Run combat for paired players."""
-        print(f"\n⚔️  COMBAT PHASE - Turn {self.turn}")
-        print("-" * 30)
+        logging.info(f"\n⚔️  COMBAT PHASE - Turn {self.turn}")
+        logging.info("-" * 30)
 
         alive = self.alive_players
         if len(alive) < 2:
-            print("Not enough players for combat!")
+            logging.info("Not enough players for combat!")
             return
 
         random.shuffle(alive)
@@ -238,7 +278,7 @@ class Game:
         for i in range(0, len(alive) - 1, 2):
             p1 = alive[i]
             p2 = alive[i + 1]
-            print(f"\n🥊 {p1.name} vs {p2.name}")
+            logging.info(f"\n🥊 {p1.name} vs {p2.name}")
 
             # Create deep copies of the boards to use in combat
             combat_board1 = p1.board.clone_for_combat()
@@ -259,13 +299,14 @@ class Game:
         # Odd player gets a bye
         if len(alive) % 2 == 1:
             odd_man = alive[-1]
-            print(f"\n😴 {odd_man.name} had no opponent this round")
+            logging.info(f"\n😴 {odd_man.name} had no opponent this round")
 
-        print("\n⚔️  Combat phase complete")
+        logging.info("\n Combat phase complete")
 
 
 # ------------------------------------------------------------------------ #
 # Quick manual test
 # ------------------------------------------------------------------------ #
 if __name__ == "__main__":
+    log_file_path = setup_logging()
     Game(num_players=8).run_game()

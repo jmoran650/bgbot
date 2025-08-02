@@ -32,9 +32,11 @@ class Combat:
         """
         Finds a valid target on the board.
         A real implementation would handle Taunt here. This simplified
-        version just picks a random minion.
+        version just picks a random alive minion.
         """
-        return random.choice(board.minions)
+        valid_targets = board.alive_minions
+
+        return random.choice(valid_targets)
     
     def resolve_combat(self) -> str:
         """

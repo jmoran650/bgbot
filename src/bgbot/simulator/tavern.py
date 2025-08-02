@@ -1,19 +1,22 @@
-from .board import Board
-# from .minion import Minion
-from .player import Player
-from .pool import Pool
-# from .minion import Tribe
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .minion import Minion
+    from .player import Player
+    from .pool import Pool
+
 
 class Tavern:
-    def __init__(self, pool: Pool):
-        self.shop = []
+    def __init__(self, owner:Player, pool: Pool):
+        self.shop : list[Minion] = []
         self.hand = []
-        self.player = Player("Player", "Default Hero")
-        self.tavern_board = Board(self.player.name, [])
+        self.owner = owner
         self.pool = pool
-        self.tavern_tier = 1
+        self.tier: int = 1
         self.is_frozen = False
 
+    # why is the count hardcoded crying emoji
     def roll(self, count: int = 3) -> None:
         """
         Roll for new minions in the shop.
@@ -25,7 +28,7 @@ class Tavern:
         self._return_shop_to_pool()
         
         # Get new minions from pool
-        new_shop = self.pool.roll(self.tavern_tier, count)
+        new_shop = self.pool.roll(self.tier, count)
         self.shop = new_shop
 
     def _return_shop_to_pool(self) -> None:
@@ -40,6 +43,7 @@ class Tavern:
         # For now, we'll just keep the shop as-is
         self.is_frozen = True
 
+
     def upgrade_tavern(self) -> bool:
         """
         Attempt to upgrade tavern tier.
@@ -49,5 +53,13 @@ class Tavern:
         """
         # This would check player's gold and increment tier
         # For now, just increment the tier
-        self.tavern_tier += 1
-        return True
+        if self.tier < 6:
+            self.tier += 1
+            return True
+        return False
+
+    def display_shop(self) -> str:
+        """Return a formatted string representing the current shop contents."""
+        if not self.shop:
+            return "Shop is empty!"
+        return "Shop: " + ", ".join(f"{m.name}({m.attack}/{m.health})" for m in self.shop)

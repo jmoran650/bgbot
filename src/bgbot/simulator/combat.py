@@ -26,16 +26,6 @@ class Combat:
             else:
                 return "board2 goes first"
     
-    # def startOfCombat(self, board1: Board, board2: Board, order: str):
-    #     if order == "board1 goes first":
-    #         combat.performStartOfCombat(board1)
-    #         combat.performStartOfCombat(board2)
-    #     elif order == "board2 goes first":
-    #         combat.performStartOfCombat(board2)
-    #         combat.performStartOfCombat(board1)
-    
-    # def performStartOfCombat(board):
-    #     #something something publish START_OF_COMBAT event to event bus?
 
     def _find_target(self, board: Board) -> Minion:
         """

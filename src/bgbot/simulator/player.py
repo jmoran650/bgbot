@@ -58,7 +58,11 @@ class Player:
 
     def game_over(self) -> None:
         """Set alive flag to False."""
+        print(f"    Returning {len(self.board.minions)} minions from {self.name}'s board to the pool.")
+        for minion in self.board.minions:
+            self.tavern.pool.return_minion(minion.name)
         self.alive = False
+        
 
     # Convenience properties --------------------------------------------
     @property

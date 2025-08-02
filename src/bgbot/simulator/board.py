@@ -10,7 +10,7 @@ Key points
 """
 
 from __future__ import annotations
-
+from copy import deepcopy
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:  # avoids runtime circular imports
@@ -26,7 +26,16 @@ class Board:
         self.capacity: int = 7
         self.minions: List[Minion] = []  # starts empty
 
-
+    def clone_for_combat(self) -> "Board":
+        """
+        Creates a deep copy of the board for combat simulation.
+        The new board has the same owner but contains deep copies of the minions,
+        ensuring that combat does not affect the player's original board state.
+        """
+        combat_board = Board(owner=self.owner)
+        combat_board.capacity = self.capacity
+        combat_board.minions = [deepcopy(m) for m in self.minions]
+        return combat_board
     # Minion helpers
 
     def add_minion(self, minion: "Minion") -> None:

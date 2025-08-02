@@ -28,6 +28,7 @@ class Minion():
     name: str
     attack: int
     health: int
+    tier: int
     tribes: List[Tribe]
     keywords: list[str] = field(default_factory=lambda: [])
     effects: list[str] = field(default_factory=lambda: [])

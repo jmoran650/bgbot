@@ -24,6 +24,10 @@ def pick_random_tribes() -> List[Tribe]:
 
 
 class Game:
+    """
+    Manages the overall state and flow of a Hearthstone Battlegrounds game,
+    including players, turns, and combat phases.
+    """
     def __init__(self, num_players: int = 4) -> None:
         """
         Start a new Battlegrounds game.
@@ -110,7 +114,15 @@ class Game:
     def simulate_player_turn(self, player: Player) -> None:
         """Very light AI for a single player's turn."""
         board = player.board
+
         tavern = player.tavern
+        tavern.start_of_turn_refresh()
+
+        player.gold = min(10, self.turn + 2)
+
+        actions_taken = 0
+        max_actions = 3
+
 
         print(
             f"  💰 Gold: {player.gold} | "
@@ -119,17 +131,15 @@ class Game:
         )
 
         # Refill gold for the turn (simple rule: turn+2 up to 10)
-        player.gold = min(10, self.turn + 2)
 
-        actions_taken = 0
-        max_actions = 3  # prevent infinite loops
+
 
         while player.gold > 0 and actions_taken < max_actions:
             action = self.choose_action(player)
 
             if action == "roll" and player.gold >= 1:
                 print(f"    🎲 {player.name} rolls the shop")
-                player.tavern.roll()
+                player.tavern.reroll_shop()
                 player.gold -= 1
                 player.tavern.display_shop()
 
@@ -180,33 +190,33 @@ class Game:
     # -------------------------------------------------------------------- #
     def choose_action(self, player: Player) -> str:
         """
-        Decide what the (very dumb) AI should do this action.
-        Possible returns: "roll", "buy", "upgrade", "freeze".
+        A simple, random AI that only chooses from valid actions.
         """
         tavern = player.tavern
         board = player.board
+        gold = player.gold
 
-        # Early game: prioritise buying cheap bodies
-        if self.turn <= 3:
-            if not tavern.shop:
-                return "roll"
-            if board.minion_count < 4:
-                return "buy"
-            return "upgrade"
+        possible_actions: List[str] = []
 
-        # Mid game: balance upgrades and board building
-        if self.turn <= 6:
-            if tavern.tier < 3 and player.gold >= tavern.tier:
-                return "upgrade"
-            if not tavern.shop:
-                return "roll"
-            return "buy"
+        # Check if buying is possible
+        if gold >= 3 and tavern.shop and not board.is_full:
+            possible_actions.append("buy")
 
-        # Late game
-        if tavern.tier < 5 and player.gold >= tavern.tier:
-            return "upgrade"
-        return random.choice(["roll", "buy"])
+        # Check if upgrading is possible
+        if gold >= tavern.upgrade_cost and tavern.tier < 6:
+            possible_actions.append("upgrade")
 
+        # Check if rolling is possible
+        if gold >= 1:
+            possible_actions.append("roll")
+
+
+        # If there are any possible actions, choose one at random
+        if possible_actions:
+            return random.choice(possible_actions)
+
+        # If no actions are possible, end the turn
+        return "end_turn"
 
 
     # -------------------------------------------------------------------- #
@@ -230,15 +240,22 @@ class Game:
             p2 = alive[i + 1]
             print(f"\n🥊 {p1.name} vs {p2.name}")
 
-            combat = Combat(p1.board, p2.board)
+            # Create deep copies of the boards to use in combat
+            combat_board1 = p1.board.clone_for_combat()
+            combat_board2 = p2.board.clone_for_combat()
+
+            # Pass the copies, not the original boards
+            combat = Combat(combat_board1, combat_board2)
             winner = combat.resolve_combat()
+
+            # Calculate damage based on the state of the copied boards after combat
             if p1.name in winner:
-                p2.take_damage(p1.board.minion_count)
+                damage_dealt = p1.tavern.tier + sum(m.tier for m in combat.board1.minions) # Get tier from blueprint
+                p2.take_damage(damage_dealt)
             elif p2.name in winner:
-                p1.take_damage(p2.board.minion_count)
+                damage_dealt = p2.tavern.tier + sum(m.tier for m in combat.board2.minions) # Get tier from blueprint
+                p1.take_damage(damage_dealt)
             
-
-
         # Odd player gets a bye
         if len(alive) % 2 == 1:
             odd_man = alive[-1]
@@ -251,4 +268,4 @@ class Game:
 # Quick manual test
 # ------------------------------------------------------------------------ #
 if __name__ == "__main__":
-    Game(num_players=4).run_game()
+    Game(num_players=8).run_game()

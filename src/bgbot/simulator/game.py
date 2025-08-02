@@ -110,7 +110,7 @@ class Game:
     def simulate_player_turn(self, player: Player) -> None:
         """Very light AI for a single player's turn."""
         board = player.board
-
+        tavern = player.tavern
 
         print(
             f"  💰 Gold: {player.gold} | "
@@ -131,11 +131,11 @@ class Game:
                 print(f"    🎲 {player.name} rolls the shop")
                 player.tavern.roll()
                 player.gold -= 1
-                self.display_shop(tavern)
+                player.tavern.display_shop()
 
             elif action == "buy" and player.gold >= 3 and tavern.shop:
                 # Buy a random minion if board space allows
-                if board.minion_count < board.capacity:
+                if board.minion_count < board.MAX_MINIONS:
                     idx = random.randint(0, len(tavern.shop) - 1)
                     minion = tavern.shop.pop(idx)
                     print(
@@ -154,7 +154,7 @@ class Game:
                     f"to tier {tavern.tier + 1}"
                 )
                 player.gold -= tavern.tier
-                tavern.upgrade()
+                player.tavern.upgrade_tavern()
 
             elif action == "freeze" and player.gold >= 1:
                 print(f"    🧊 {player.name} freezes the shop")

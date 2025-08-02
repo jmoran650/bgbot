@@ -1,46 +1,67 @@
+"""player.py
+Defines the Player class for the Battlegrounds simulator.
+
+Key points
+----------
+• A Player owns exactly one Board (for combat) and one Tavern (shop UI).
+• Board and Tavern are instantiated inside __init__; callers provide only
+  the player's name, hero, and the shared Pool object.
+"""
+
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from .board import Board
 from .tavern import Tavern
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # Avoid circular imports at runtime
     from .pool import Pool
 
 
-class Player():
-    """Represents a player in a Hearthstone Battlegrounds game."""
+class Player:
+    """Represents a single Battlegrounds player."""
 
-    def __init__(self, name: str, hero: str, pool: "Pool"):
-        """Initializes a Player instance.
-
-        Args:
-            name: The name of the player.
-            hero: The name of the hero the player is using.
-            pool: The shared minion pool for the game.
+    def __init__(self, name: str, hero: str, pool: Pool) -> None:
         """
-        self.name = name
-        self.hero = hero
-        self.health = 30
-        self.alive = True
-        self.armor = 0
-        # A player creates and owns their board and tavern instance.
-        self.board = Board(player_name=self.name, minions=[])
-        self.tavern = Tavern(owner=self, pool=pool)
-        self.gold: int = 3
-
-    def take_damage(self, damage: int):
-        """Reduces the player's health by the specified amount of damage.
-
-        If the player's health drops to 0 or below, they are eliminated.
-
-        Args:
-            damage: The amount of damage to take.
+        Parameters
+        ----------
+        name : str
+            The player's display name.
+        hero : str
+            The Battlegrounds hero they are piloting.
+        pool : Pool
+            The shared minion pool; needed so the Player can create a Tavern.
         """
-        self.health -= damage
+        # Identity & stats --------------------------------------------------
+        self.name: str = name
+        self.hero: str = hero
+        self.health: int = 30
+        self.armor: int = 0
+        self.alive: bool = True
+
+        # Economy -----------------------------------------------------------
+        self.gold: int = 0  # Refilled each shop phase by Game logic
+
+        # Owned objects -----------------------------------------------------
+        self.board: Board = Board(owner=self)          # combat board
+        self.tavern: Tavern = Tavern(owner=self, pool=pool)  # shop interface
+
+    # ------------------------------------------------------------------ #
+    # Gameplay helpers
+    # ------------------------------------------------------------------ #
+    def take_damage(self, dmg: int) -> None:
+        """Lose health; if ≤0, mark player as dead."""
+        self.health -= dmg
         if self.health <= 0:
             self.game_over()
 
-    def game_over(self):
-        """Sets the player's status to not alive."""
+    def game_over(self) -> None:
+        """Set alive flag to False."""
         self.alive = False
+
+    # Convenience properties --------------------------------------------
+    @property
+    def is_alive(self) -> bool:
+        """return whether a player is alive or not"""
+        return self.alive

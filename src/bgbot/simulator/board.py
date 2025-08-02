@@ -1,65 +1,72 @@
+"""board.py
+Represents the minion lineup a single player brings into combat.
+
+Key points
+----------
+• A Board is created by its owning Player (`Board(owner=self)` inside
+  player.py).
+• Capacity is configurable but defaults to 7, matching Battlegrounds.
+• All minion-management helpers live here; combat code consumes them.
+"""
+
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
+from typing import TYPE_CHECKING, List
+
+if TYPE_CHECKING:  # avoids runtime circular imports
     from .minion import Minion
+    from .player import Player
 
-MAX_MINIONS = 7
 
 class Board:
-    """Represents the board of minions for a player."""
+    """Container for a player's in-combat minions."""
 
-    MAX_MINIONS: int = 7
+    def __init__(self, owner: "Player", capacity: int = 7) -> None:
+        self.owner: Player = owner
+        self.capacity: int = capacity
+        self.minions: List[Minion] = []  # starts empty
 
-    def __init__(self, player_name: str, minions: list[Minion] ):
-        """Initializes the Board with an empty list of minions."""
-        self.player_name = player_name
-        self.minions = minions
-        
-
-    def add_minion(self, minion: Minion):
-        """Adds a minion to the board if there is space.
-
-        Args:
-            minion: The Minion object to add.
-
-        Raises:
-            ValueError: If the board is already full.
-        """
-        if len(self.minions) < self.MAX_MINIONS:
-            self.minions.append(minion)
-        else:
+    
+    # Minion helpers
+    
+    def add_minion(self, minion: "Minion") -> None:
+        """Add `minion` to the board, raising if the board is full."""
+        if len(self.minions) >= self.capacity:
             raise ValueError("Board is full")
+        self.minions.append(minion)
 
-    def remove_minion(self, minion: Minion):
-        """Removes a specific minion from the board.
-
-        Args:
-            minion: The Minion object to remove.
-        """
+    def remove_minion(self, minion: "Minion") -> None:
+        """Remove `minion` from the board if present."""
         if minion in self.minions:
             self.minions.remove(minion)
 
-    def get_minions(self) -> list[Minion]:
-        """Returns the list of minions on the board."""
-        return self.minions
+    def remove_dead_minions(self) -> None:
+        """Strip out any minions whose health ≤ 0."""
+        before = self.minion_count
+        self.minions = [m for m in self.minions if m.is_alive]
+        if self.minion_count < before:
+            print(f"    - Dead minions removed from {self.owner.name}'s board.")
+
     
-    def remove_dead_minions(self):
-        """Filters out any minions that have died during an attack."""
-        initial_count = self.minion_count
-        self.minions = [minion for minion in self.minions if minion.is_alive]
-        if self.minion_count < initial_count:
-            print(f"    - Dead minions removed from {self.player_name}'s board.")
-
-
+    # Convenience properties
+    
     @property
     def minion_count(self) -> int:
-        """Returns the number of minions currently on the board."""
         return len(self.minions)
 
+    @property
+    def is_full(self) -> bool:
+        return len(self.minions) >= self.capacity
+
+    @property
+    def alive_minions(self) -> List["Minion"]:
+        return [m for m in self.minions if m.is_alive]
+
+    
+    # Debugging / display
+    
     def __repr__(self) -> str:
-        """Provides a string representation of the board for debugging."""
         if not self.minions:
-            return "<Board: []>"
-        minion_reprs = ", ".join(repr(m) for m in self.minions)
-        return f"<Board: [{minion_reprs}]>"
+            return f"<Board({self.owner.name}): []>"
+        minion_str = ", ".join(repr(m) for m in self.minions)
+        return f"<Board({self.owner.name}): [{minion_str}]>"

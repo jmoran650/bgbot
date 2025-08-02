@@ -9,7 +9,7 @@ Key points
 """
 
 from __future__ import annotations
-
+import logging
 from typing import TYPE_CHECKING
 
 from .board import Board
@@ -58,7 +58,7 @@ class Player:
 
     def game_over(self) -> None:
         """Set alive flag to False."""
-        print(f"    Returning {len(self.board.minions)} minions from {self.name}'s board to the pool.")
+        logging.info(f"    Returning {len(self.board.minions)} minions from {self.name}'s board to the pool.")
         for minion in self.board.minions:
             self.tavern.pool.return_minion(minion.name)
         self.alive = False

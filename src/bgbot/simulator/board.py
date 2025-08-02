@@ -11,6 +11,7 @@ Key points
 
 from __future__ import annotations
 from copy import deepcopy
+import logging
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:  # avoids runtime circular imports
@@ -54,7 +55,7 @@ class Board:
         before = self.minion_count
         self.minions = [m for m in self.minions if m.is_alive]
         if self.minion_count < before:
-            print(f"    - Dead minions removed from {self.owner.name}'s board.")
+            logging.info(f"    - Dead minions removed from {self.owner.name}'s board.")
 
     
     # Convenience properties

@@ -43,3 +43,5 @@ digest.txt
 # Logs
 bgbot/src/bgbot/logs/*
 bgbot/src/bgbot/logs/
+
+*.log

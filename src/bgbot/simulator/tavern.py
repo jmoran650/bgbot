@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, List, Dict
+import logging
 
 if TYPE_CHECKING:
     from .minion import Minion
@@ -36,7 +37,7 @@ class Tavern:
         """
         if self.is_frozen:
             self.is_frozen = False  # Unfreeze for the next turn
-            print(f"    Shop was frozen, now available for {self.owner.name}.")
+            logging.info(f"    Shop was frozen, now available for {self.owner.name}.")
         else:
             self._reroll()
 
@@ -66,7 +67,7 @@ class Tavern:
             self.tier += 1
             # Set the base cost for the *next* upgrade
             self.upgrade_cost = self.UPGRADE_COSTS.get(self.tier + 1, 0)
-            print(f"    Tavern is now Tier {self.tier}.")
+            logging.info(f"    Tavern is now Tier {self.tier}.")
 
     def reduce_upgrade_cost(self) -> None:
         """Reduces the upgrade cost by 1 (called once per turn)."""
@@ -74,9 +75,9 @@ class Tavern:
             self.upgrade_cost -= 1
 
     def display_shop(self):
-        """Prints the current contents of the shop."""
+        """logging.infos the current contents of the shop."""
         if not self.shop:
-            print("    Shop is empty!")
+            logging.info("    Shop is empty!")
             return
         shop_str = ", ".join(f"{m.name}({m.attack}/{m.health})" for m in self.shop)
-        print(f"    Shop: [{shop_str}]")
+        logging.info(f"    Shop: [{shop_str}]")

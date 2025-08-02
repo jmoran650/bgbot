@@ -2,6 +2,7 @@
 # pyright: reportMissingImports=false, reportUnknownMemberType=false
 from __future__ import annotations
 import random
+import logging
 from collections import deque
 from .board import Board
 from .minion import Minion #, Tribe
@@ -63,7 +64,7 @@ class Combat:
             attacker = attacking_queue.popleft()
             target = self._find_target(defending_board)
 
-            print(f"\n--> {attacker.name} attacks {target.name}!")
+            logging.info(f"\n--> {attacker.name} attacks {target.name}!")
             target.take_damage(attacker.attack)
             attacker.take_damage(target.attack)
 
@@ -78,7 +79,7 @@ class Combat:
             first_attacker = attackers2 if first_attacker is attackers1 else attackers1
 
         # --- Determine Winner ---
-        print("\n" + "="*30 + "\nCombat has ended.")
+        logging.info("\n" + "="*30 + "\nCombat has ended.")
         if attackers1:
             return f"{self.board1.owner.name} wins!"
         if attackers2:

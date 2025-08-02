@@ -2,7 +2,7 @@
 Defines `Tribe` enum and `Minion` data class for the Hearthstone Battlegrounds simulator.
 """
 from __future__ import annotations
-
+import logging
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import List
@@ -45,7 +45,7 @@ class Minion():
     def take_damage(self, damage: int):
         """Reduces the minion's health by the damage amount."""
         self.health -= damage
-        print(f"    - {self.name} takes {damage} damage, health is now {self.health}.")
+        logging.info(f"- {self.name} takes {damage} damage, health is now {self.health}.")
 
     @property
     def is_alive(self) -> bool:

@@ -21,14 +21,14 @@ if TYPE_CHECKING:  # avoids runtime circular imports
 class Board:
     """Container for a player's in-combat minions."""
 
-    def __init__(self, owner: "Player", capacity: int = 7) -> None:
+    def __init__(self, owner: "Player") -> None:
         self.owner: Player = owner
-        self.capacity: int = capacity
+        self.capacity: int = 7
         self.minions: List[Minion] = []  # starts empty
 
-    
+
     # Minion helpers
-    
+
     def add_minion(self, minion: "Minion") -> None:
         """Add `minion` to the board, raising if the board is full."""
         if len(self.minions) >= self.capacity:

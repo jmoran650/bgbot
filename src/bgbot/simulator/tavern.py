@@ -58,8 +58,9 @@ class Tavern:
             return True
         return False
 
-    def display_shop(self) -> str:
+    def display_shop(self):
         """Return a formatted string representing the current shop contents."""
         if not self.shop:
-            return "Shop is empty!"
-        return "Shop: " + ", ".join(f"{m.name}({m.attack}/{m.health})" for m in self.shop)
+            print("Shop is empty!")
+            return
+        print("Shop: " + ", ".join(f"{m.name}({m.attack}/{m.health})" for m in self.shop))

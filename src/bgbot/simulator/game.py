@@ -135,7 +135,7 @@ class Game:
 
             elif action == "buy" and player.gold >= 3 and tavern.shop:
                 # Buy a random minion if board space allows
-                if board.minion_count < board.MAX_MINIONS:
+                if board.minion_count < board.capacity:
                     idx = random.randint(0, len(tavern.shop) - 1)
                     minion = tavern.shop.pop(idx)
                     print(
@@ -231,7 +231,13 @@ class Game:
             print(f"\n🥊 {p1.name} vs {p2.name}")
 
             combat = Combat(p1.board, p2.board)
-            combat.resolve_combat()
+            winner = combat.resolve_combat()
+            if p1.name in winner:
+                p2.take_damage(p1.board.minion_count)
+            elif p2.name in winner:
+                p1.take_damage(p2.board.minion_count)
+            
+
 
         # Odd player gets a bye
         if len(alive) % 2 == 1:

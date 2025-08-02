@@ -34,6 +34,17 @@ ALL_MINIONS_DATA = [
     MinionData('Manasaber', 2, 4, 2, [Tribe.BEAST]),
     MinionData('Annoy-o-Tron', 2, 1, 2, [Tribe.MECH], ['Taunt', 'Divine Shield']),
     MinionData('Patient Scout', 3, 1, 1, [Tribe.NEUTRAL], ['Discover']),
+    MinionData('Murloc Tidehunter', 4, 2, 1, [Tribe.MURLOC]),
+    MinionData('Fiendish Servant', 4, 2, 1, [Tribe.DEMON]),
+    MinionData('Harvest Golem', 4, 2, 3, [Tribe.MECH], ['Deathrattle']),
+    MinionData('Kaboom Bot', 5, 2, 2, [Tribe.MECH], ['Deathrattle']),
+    MinionData('Kindly Grandmother', 5, 1, 1, [Tribe.BEAST], ['Deathrattle']),
+    MinionData('Southsea Captain', 5, 3, 3, [Tribe.PIRATE], ['Aura']),
+    MinionData('Crackling Cyclone', 6, 4, 1, [Tribe.ELEMENTAL], ['Windfury', 'Divine Shield']),
+    MinionData('Bronze Warden', 6, 5, 8, [Tribe.DRAGON], ['Reborn', 'Divine Shield']),
+    MinionData('Replicating Menace', 6, 5, 5, [Tribe.MECH], ['Magnetic', 'Deathrattle']),
+    MinionData('Imp Gang Boss', 6, 4, 6, [Tribe.DEMON], ['Summon']),
+
 ]
 
 # The number of copies of each minion, based on its Tavern Tier.

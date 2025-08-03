@@ -43,20 +43,39 @@ class Board:
         """Add `minion` to the board, raising if the board is full."""
         if len(self.minions) >= self.capacity:
             raise ValueError("Board is full")
+        minion.attach_to_game(self.owner.event_bus)
         self.minions.append(minion)
 
     def remove_minion(self, minion: "Minion") -> None:
         """Remove `minion` from the board if present."""
         if minion in self.minions:
+            minion.detach_from_game()
             self.minions.remove(minion)
 
     def remove_dead_minions(self) -> None:
-        """Strip out any minions whose health ≤ 0."""
-        before = self.minion_count
-        self.minions = [m for m in self.minions if m.is_alive]
-        if self.minion_count < before:
-            logging.info(f"    - Dead minions removed from {self.owner.name}'s board.")
+        """Strip out any minions whose health ≤ 0, triggering death effects."""
+        dead_minions = [m for m in self.minions if not m.is_alive]
+        if not dead_minions:
+            return
 
+        logging.info(f"  - Removing {len(dead_minions)} dead minion(s) from {self.owner.name}'s board.")
+        
+        # The Board emits the event, not the minion itself.
+        for minion in dead_minions:
+            if self.owner.event_bus:
+                # Emit a generic event with all necessary context
+                from .events import Event, EventType
+                death_event = Event(
+                    type=EventType.MINION_DIES,
+                    source=minion,
+                    player=self.owner
+                )
+                self.owner.event_bus.emit(death_event)
+            
+            # Now, detach the minion from the game
+            minion.detach_from_game()
+
+        self.minions = [m for m in self.minions if m.is_alive]
     
     # Convenience properties
     

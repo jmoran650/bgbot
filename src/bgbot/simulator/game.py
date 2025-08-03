@@ -18,6 +18,7 @@ from .minion import Tribe
 from .pool import Pool
 from .player import Player
 from .combat import Combat
+from .events import EventBus
 
 
 def setup_logging() -> str:
@@ -78,6 +79,7 @@ class Game:
         # Global setup -------------------------------------------------------
         self.tribes = pick_random_tribes()
         self.pool: Pool = Pool(set(self.tribes))
+        self.event_bus: EventBus = EventBus()
 
         hero_names = [
             "Reno", "Flurgl", "Patches", "Millhouse",
@@ -89,7 +91,7 @@ class Game:
         for idx in range(num_players):
             name = f"Player {idx + 1}"
             hero = hero_names[idx % len(hero_names)]
-            self.players.append(Player(name, hero, self.pool))
+            self.players.append(Player(name, hero, self.pool, self.event_bus))
 
         # Game-state trackers ------------------------------------------------
         self.turn: int = 1

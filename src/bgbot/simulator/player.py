@@ -13,6 +13,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from .board import Board
+from .events import EventBus
 from .tavern import Tavern
 
 if TYPE_CHECKING:  # Avoid circular imports at runtime
@@ -22,7 +23,7 @@ if TYPE_CHECKING:  # Avoid circular imports at runtime
 class Player:
     """Represents a single Battlegrounds player."""
 
-    def __init__(self, name: str, hero: str, pool: Pool) -> None:
+    def __init__(self, name: str, hero: str, pool: Pool, event_bus: EventBus) -> None:
         """
         Parameters
         ----------
@@ -42,6 +43,12 @@ class Player:
 
         # Economy -----------------------------------------------------------
         self.gold: int = 0  # Refilled each shop phase by Game logic
+
+        # Permanent buffs ---------------------------------------------------
+        self.permanent_buffs: Dict[str, any] = {}
+
+        # Event Bus ---------------------------------------------------------
+        self.event_bus: EventBus = event_bus
 
         # Owned objects -----------------------------------------------------
         self.board: Board = Board(owner=self)          # combat board
@@ -69,3 +76,11 @@ class Player:
     def is_alive(self) -> bool:
         """return whether a player is alive or not"""
         return self.alive
+
+    # Debugging / display -----------------------------------------------
+    def __repr__(self) -> str:
+        return f"<Player {self.name} ({self.hero}) {self.health} HP>"
+
+    def print_board(self) -> None:
+        """Prints the player's current board state to the console."""
+        print(f"{self.name}'s board: {self.board}")

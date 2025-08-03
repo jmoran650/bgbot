@@ -45,3 +45,5 @@ bgbot/src/bgbot/logs/*
 bgbot/src/bgbot/logs/
 
 *.log
+
+.env

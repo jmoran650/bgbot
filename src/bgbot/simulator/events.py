@@ -44,7 +44,7 @@ class Event:
     target: Optional[Minion] = None  # The minion being affected
     board: Optional[Board] = None    # The board where event occurs
     player: Optional[Player] = None  # The player involved
-    data: Dict[str, Any] = field(default_factory=dict)  # Additional event data
+    data: Dict[str, Any] = field(default_factory=lambda: {}) # Additional event data
 
 
 class EventBus:
